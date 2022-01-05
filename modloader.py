@@ -64,7 +64,7 @@ if (game.version.startswith("m")):
     modinstaller(modloaderdir, gamelocation)
 
 
-if (game.version) != '2a':
+if (game.version) != '2.1a':
     print("Update your game to compatible version! Else things will break.")
     input();1
 
