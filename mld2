@@ -16,7 +16,7 @@ def clearConsole():
     os.system(command)
 
 class game():
-    version = 'm2a'
+    version = 'm2.1a'
     stable = False
 
     def isStable():
@@ -25,4 +25,4 @@ class game():
 
 class mods():
     isModded = True # if false, something broke...
-    version = '0.1'
+    version = '0.2'
