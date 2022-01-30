@@ -6,7 +6,7 @@ def modinstaller(mld, gl): # lazy code here
         mdir = input("drop mod folder here. ")
         if (os.path.isdir(mdir + "\\modmeta.json")): print("not a valid folder")
         else: 
-            print("validating..."); time.sleep(0.2137); import json
+            import json
             modmeta = json.load(open(mdir + "\\modmeta.json"))
             modfiles = modmeta['files']
             print("mod name: " + modmeta['name'])
@@ -17,11 +17,25 @@ def modinstaller(mld, gl): # lazy code here
             os.mkdir(gl + "\\mods\\" + modmeta['name'])
             print("\n")
             for i in modfiles:
-                shutil.copy(gl + "\\" + i, gl + "\\mods\\" + i)
-                print("patching - " + i); shutil.copy(mdir + "\\" + i, gl + "\\" + i)
-
+                print("patching - " + i);
+                shutil.copy(gl + "\\" + i, gl + "\\mods\\" + i + ".rollback") # create a backup 
+                if modmeta['patchmode'] == "append": merge(mdir+"\\"+i, gl+"\\"+i)
+                elif modmeta['patchmode'] == "replace": shutil.copy(mdir + "\\" + i, gl + "\\" + i)
+                else: print("invalid patchmode, skipping.");
             print("\ndone."); input(); exit();
 
+def merge(mod, target):
+    with open(target) as f: # load target
+        targetdata = f.read()
+    with open(mod) as f: # load mod
+        moddata = f.read()
+
+    targetdata +="\n" # insert newline 
+    targetdata += moddata # megre
+    os.remove(target) # remove original file
+    with open(target, "w") as f: # write it from memory
+        f.write(targetdata) 
+        f.close()
 
 def installer():   
     time.sleep(0.2); print("\ninstalling mod loader.")
@@ -41,6 +55,8 @@ def installer():
     os.mkdir(gamelocation + "\\mods\\lib\\")
     os.mkdir(gamelocation + "\\mods\\entitylogic\\")
     os.mkdir(gamelocation + "\\mods\\assets\\")
+    with open(gamelocation + "\\.warning", "w") as wfile:
+        wfile.write("a"); wfile.close()
 
     time.sleep(0.2)
     print("done."); input()
@@ -64,9 +80,9 @@ if (game.version.startswith("m")):
     modinstaller(modloaderdir, gamelocation)
 
 
-if (game.version) != '2.1a':
+if (game.version) != '2.2a':
     print("Update your game to compatible version! Else things will break.")
-    input();1
+    input();
 
 time.sleep(0.4); print(" ok"); installer()
 
